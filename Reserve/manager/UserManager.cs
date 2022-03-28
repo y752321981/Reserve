@@ -33,7 +33,7 @@ namespace Reserve.manager
         public User FindUserByRow(int row)
         {
             User user = null;
-            users.ForEach(u =>
+            users?.ForEach(u =>
             {
                 if (u.Row == row)
                     user = u;
@@ -42,7 +42,7 @@ namespace Reserve.manager
         }
         public void ResetReserveState()
         {
-            users.ForEach(item =>
+            users?.ForEach(item =>
             {
                 item.IsReserve = false;
             });
@@ -50,7 +50,7 @@ namespace Reserve.manager
 
         public void QueryReserveInfo()
         {
-            users.ForEach(item =>
+            users?.ForEach(item =>
             {
                 List<string> list = HttpManager.Instance.QueryReserveInfo(item);
                 string info = string.Empty;
@@ -73,7 +73,7 @@ namespace Reserve.manager
 
         public void StartReserve()
         {
-            users.ForEach(item =>
+            users?.ForEach(item =>
             {
                 if (!item.IsReserve)
                 {

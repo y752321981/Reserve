@@ -20,17 +20,19 @@ namespace Reserve.utils
 		}
 		public delegate void FreshDelegate();
 		public static event FreshDelegate FreshEvene;
-		
+		public static System.Windows.Forms.RichTextBox logText;
 		public static void Log(string message)
 		{
 			logInfo.Add(DateTime.Now.ToString("MM/dd hh:mm:ss   ") + message);
-			FreshEvene?.Invoke();
+			Action AsyncUIDelegate = delegate () { FreshEvene(); };//定义一个委托
+			logText?.Invoke(AsyncUIDelegate);
 		}
 
 		public static void ResetLogInfo()
 		{
 			logInfo.Clear();
-			FreshEvene?.Invoke();
+			Action AsyncUIDelegate = delegate () { FreshEvene(); };//定义一个委托
+			logText?.Invoke(AsyncUIDelegate);
 		}
 	}
 }

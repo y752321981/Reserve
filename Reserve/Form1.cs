@@ -27,24 +27,32 @@ namespace Reserve
 			TimeThreadManager.Instance.StartThread(timeBox);
 			Fresh();
 			Debug.FreshEvene += Debug_FreshEvene;
+			Debug.logText = logText;
 			Debug.Log("加载好了");
 		}
 
         private void Debug_FreshEvene()
         {
-			
-			logText.Clear();
-            List<ListViewItem> listViewItems = new List<ListViewItem>();
-			logText.Text = Debug.LogInfo;
-			logText.SelectionStart = logText.Text.Length;
-			logText.ScrollToCaret();
-			logText.Refresh();
+			try
+			{
+				logText.Clear();
+				List<ListViewItem> listViewItems = new List<ListViewItem>();
+				logText.Text = Debug.LogInfo;
+				logText.SelectionStart = logText.Text.Length;
+				logText.ScrollToCaret();
+				logText.Refresh();
+			}
+			catch (Exception ex)
+			{
+				Debug.Log(ex.Message);
+			}
 		}
 
         private void Form1_Close(object sender, EventArgs e)
 		{
 			
 			Debug.FreshEvene -= Debug_FreshEvene;
+			Debug.logText = null;
 			ConfigManager.Instance.Save();
 			TimeThreadManager.Instance.EndThread();
 		}
@@ -148,5 +156,40 @@ namespace Reserve
         {
 			Debug.ResetLogInfo();
         }
-    }
+
+		private void ComputerStateChange(bool changeResource)
+		{
+			if(KeepDis.CheckState == CheckState.Unchecked && noSleep.CheckState == CheckState.Unchecked)
+			{
+				TimeThreadManager.Instance.sleepState = TimeThreadManager.SleepState.Normal;
+				Debug.Log("电脑状态切换为:" + TimeThreadManager.Instance.sleepState.ToString());
+				return;
+			}
+			if(changeResource)
+			{
+				KeepDis.CheckState = CheckState.Unchecked;
+				noSleep.CheckState = CheckState.Checked;
+				TimeThreadManager.Instance.sleepState = TimeThreadManager.SleepState.No_Sleep;
+			}
+			else
+			{
+				noSleep.CheckState = CheckState.Unchecked;
+				KeepDis.CheckState = CheckState.Checked;
+				TimeThreadManager.Instance.sleepState= TimeThreadManager.SleepState.Keep_Display;
+			}
+			Debug.Log("电脑状态切换为:" + TimeThreadManager.Instance.sleepState.ToString());
+		}
+
+	
+
+		private void noSleep_Click(object sender, EventArgs e)
+		{
+			ComputerStateChange(true);
+		}
+
+		private void KeepDis_Click(object sender, EventArgs e)
+		{
+			ComputerStateChange(false);
+		}
+	}
 }
