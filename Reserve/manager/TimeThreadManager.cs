@@ -44,7 +44,7 @@ namespace Reserve.manager
 						{
 							Debug.Log("自动启动预约");
 							UserManager.Instance.StartReserve();
-							Thread.Sleep(500);
+							
 						}
 						if (DateTime.Now.Minute % 2 == 0 && DateTime.Now.Second == 1)
 						{

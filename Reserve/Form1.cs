@@ -121,7 +121,7 @@ namespace Reserve
 
         private void UserTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-			if (e.ColumnIndex != -1)
+			if (e.ColumnIndex != -1 && e.RowIndex != -1)
 			{
                 User user = UserManager.Instance.FindUserByRow(e.RowIndex);
                 UserTableColumn columnIndex = (UserTableColumn)e.ColumnIndex;

@@ -54,3 +54,4 @@ D:\Reserve\Reserve\obj\Debug\Reserve.csproj.CoreCompileInputs.cache
 D:\Reserve\Reserve\obj\Debug\Reserve.csproj.CopyComplete
 D:\Reserve\Reserve\obj\Debug\Reserve.exe
 D:\Reserve\Reserve\obj\Debug\Reserve.pdb
+D:\Reserve\Reserve\obj\Debug\Reserve.csproj.AssemblyReference.cache
