@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 
 namespace LibraryReserve.pojo.response
 {
-    public class TimeData1
+    public class TimeStruct
     {
         public string id { get; set; }
         public string value { get; set; }
     }
 
-    public class EndTimeData
+    public class TimeData
     {
-        public List<TimeData1> endTimes { get; set; }
+        public List<TimeStruct> endTimes { get; set; }
 
-        public EndTimeData()
+        public TimeData()
         {
-            endTimes = new List<TimeData1>();
+            endTimes = new List<TimeStruct>();
         }
     }
-    public class EndTimeResponse
+    public class TimeResponse
     {
         public string status { get; set; }
-        public EndTimeData data { get; set; }
+        public TimeData data { get; set; }
         public string message { get; set; }
         public string code { get; set; }
 

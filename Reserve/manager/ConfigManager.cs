@@ -20,7 +20,7 @@ namespace Reserve.manager
 		}
 		private Config config;
 		private string path;
-		public string folderPath { get { return config.excelFolderPath; } set { config.excelFolderPath = value; } }
+		public string filePath { get { return config.excelFilePath; } set { config.excelFilePath = value; } }
 		private ConfigManager()
 		{
 			path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Reserve\\config";

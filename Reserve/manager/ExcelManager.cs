@@ -13,7 +13,7 @@ namespace Reserve.manager
 	public class ExcelManager
 	{
 		private static ExcelManager instance;
-		private List<User> users;
+		
 		public static ExcelManager Instance 
 		{ 
 			get
@@ -24,13 +24,13 @@ namespace Reserve.manager
 			} 
 		}
 
-		private ExcelManager() { users = new List<User>(); }
+		private ExcelManager() { }
 
-        public List<User> Users { get { return users; } }
-        public string DirPath { get { return ConfigManager.Instance.folderPath; } set { ConfigManager.Instance.folderPath = value; } }
+    
+        public string FilePath { get { return ConfigManager.Instance.filePath; } set { ConfigManager.Instance.filePath = value; } }
         public void WriteUser()
 		{
-            string path = DirPath + "/名单.xlsx";
+            string path = FilePath;
             FileInfo fileInfo = new FileInfo(path);
             if (fileInfo.Exists)
             {
@@ -47,20 +47,20 @@ namespace Reserve.manager
                 worksheet.Cells[1, 3].Value = "图书馆室";
                 worksheet.Cells[1, 4].Value = "座位";
                 worksheet.Cells[1, 5].Value = "开始时间";
-				for (int i = 2; i <= users.Count + 1; i++)
+				for (int i = 2; i <= UserManager.Instance.Users.Count + 1; i++)
 				{
-                    worksheet.Cells[i, 1].Value = users[i].Id;
-                    worksheet.Cells[i, 2].Value = users[i].Password;
-                    worksheet.Cells[i, 3].Value = users[i].Name;
-                    worksheet.Cells[i, 4].Value = users[i].Seat;
-                    worksheet.Cells[i, 5].Value = users[i].Time;
+                    worksheet.Cells[i, 1].Value = UserManager.Instance.Users[i].Id;
+                    worksheet.Cells[i, 2].Value = UserManager.Instance.Users[i].Password;
+                    worksheet.Cells[i, 3].Value = UserManager.Instance.Users[i].Name;
+                    worksheet.Cells[i, 4].Value = UserManager.Instance.Users[i].Seat;
+                    worksheet.Cells[i, 5].Value = UserManager.Instance.Users[i].Time;
                 }
             }
         }
         public List<User> ReadUser()
         {
-            users.Clear();
-            string path = DirPath + "/名单.xlsx";
+            List<User> users = new List<User>();
+            string path = FilePath;
             if (!File.Exists(path))
                 return null;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -77,7 +77,7 @@ namespace Reserve.manager
                         {
                             continue;
                         }
-                        User user = new User(worksheet.Cells[i, 1].Value.ToString(), worksheet.Cells[i, 2].Value.ToString(), worksheet.Cells[i, 3].Value.ToString(), worksheet.Cells[i, 4].Value.ToString(), worksheet.Cells[i, 5].Value.ToString(), worksheet.Cells[i, 6].Value);  
+                        User user = new User(worksheet.Cells[i, 1].Value.ToString(), worksheet.Cells[i, 2].Value.ToString(), worksheet.Cells[i, 3].Value.ToString(), worksheet.Cells[i, 4].Value.ToString(), worksheet.Cells[i, 5].Value.ToString(), worksheet.Cells[i, 6].Value);
                         users.Add(user);
                     }
                 }

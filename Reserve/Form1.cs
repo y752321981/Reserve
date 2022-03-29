@@ -1,5 +1,6 @@
 ﻿using LibraryReserve.pojo;
 using Reserve.manager;
+using Reserve.pojo.constant;
 using Reserve.utils;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,27 @@ namespace Reserve
 		{
 			TimeThreadManager.Instance.StartThread(timeBox);
 			Fresh();
+			Debug.FreshEvene += Debug_FreshEvene;
+			Debug.Log("加载好了");
 		}
-		private void Form1_Close(object sender, EventArgs e)
+
+        private void Debug_FreshEvene()
+        {
+			
+			logText.Clear();
+            List<ListViewItem> listViewItems = new List<ListViewItem>();
+			logText.Text = Debug.LogInfo;
+			logText.SelectionStart = logText.Text.Length;
+			logText.ScrollToCaret();
+			logText.Refresh();
+		}
+
+        private void Form1_Close(object sender, EventArgs e)
 		{
+			
+			Debug.FreshEvene -= Debug_FreshEvene;
 			ConfigManager.Instance.Save();
+			TimeThreadManager.Instance.EndThread();
 		}
 
 		private void fresh_button_Click(object sender, EventArgs e)
@@ -39,9 +57,9 @@ namespace Reserve
 		
 		private void Fresh()
 		{
-			List<User> users = ExcelManager.Instance.ReadUser();
+			List<User> users = UserManager.Instance.FreshUserList();
 			DataGradViewDisplay(UserTable, users);
-			folderName.Text = ConfigManager.Instance.folderPath;
+			folderName.Text = ConfigManager.Instance.filePath;
 		}
 
 		private void DataGradViewDisplay(DataGridView dataGridView, List<User> users)
@@ -62,30 +80,12 @@ namespace Reserve
                         Value = users[i].Id
                     };
                     row.Cells.Add(user);
-                    DataGridViewTextBoxCell password = new DataGridViewTextBoxCell
-                    {
-                        Value = users[i].Password
-                    };
-                    row.Cells.Add(password);
-                    DataGridViewTextBoxCell room = new DataGridViewTextBoxCell
-                    {
-                        Value = users[i].Name
-                    };
-                    row.Cells.Add(room);
-                    DataGridViewTextBoxCell seat = new DataGridViewTextBoxCell
-                    {
-                        Value = users[i].Seat
-                    };
-                    row.Cells.Add(seat);
-                    DataGridViewTextBoxCell time = new DataGridViewTextBoxCell
-                    {
-                        Value = users[i].Time
-                    };
-                    row.Cells.Add(time);
+					DataGridViewButtonCell reserveInfo = new DataGridViewButtonCell();
+					row.Cells.Add(reserveInfo);
 					DataGridViewButtonCell dataGridViewButtonCell = new DataGridViewButtonCell();
-					users[i].Row = i;
 					row.Cells.Add(dataGridViewButtonCell);
 					dataGridView.Rows.Add(row);
+					users[i].Row = i;
 				}
 			}
 		}
@@ -94,17 +94,18 @@ namespace Reserve
 		{
 			Thread dialogThread = new Thread(() =>
 			{
-				FolderBrowserDialog dialog = new FolderBrowserDialog();
-
-				dialog.Description = "选择文件夹";
+				
+				OpenFileDialog dialog = new OpenFileDialog();
+				dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+				dialog.Title = "选择文件";
+				dialog.Filter = "Excel文件|*.xlsx;*.xls";
 				DialogResult result = dialog.ShowDialog();
 				if (result == DialogResult.OK)
                 {
-					ExcelManager.Instance.DirPath = dialog.SelectedPath;
+					ConfigManager.Instance.filePath = dialog.FileName;
 					Action AsyncUIDelegate = delegate () { Fresh(); };//定义一个委托
 					this?.Invoke(AsyncUIDelegate);
 				}
-				
 			});
 			dialogThread.SetApartmentState(ApartmentState.STA);
 			dialogThread.Start();
@@ -114,19 +115,38 @@ namespace Reserve
         {
 			if (e.ColumnIndex != -1)
 			{
-				DataGridViewColumn column = UserTable.Columns[e.ColumnIndex];
-				if (column is DataGridViewButtonColumn)
-				{
-					ExcelManager.Instance.Users.ForEach(item =>
-					{
-						if (item.Row == e.RowIndex)
-						{
-							MessageBox.Show(item.ToString());
-						}
-					});
-			
-				}
-			}
+                User user = UserManager.Instance.FindUserByRow(e.RowIndex);
+                UserTableColumn columnIndex = (UserTableColumn)e.ColumnIndex;
+                switch (columnIndex)
+                {
+                    case UserTableColumn.ID:
+
+
+                        break;
+                    case UserTableColumn.ReserveInfo:
+						Debug.Log(user.ReserveInfo == String.Empty ? user.Id +":暂无预约信息" : user.ReserveInfo);
+
+                        break;
+                    case UserTableColumn.DetailInfo:
+						MessageBox.Show(user.ToString());
+
+
+						break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void reserveButton_Click(object sender, EventArgs e)
+        {
+			Debug.Log("手动启动预约");
+			UserManager.Instance.StartReserve();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+			Debug.ResetLogInfo();
         }
     }
 }

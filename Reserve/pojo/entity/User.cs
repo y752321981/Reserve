@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reserve.manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,14 +30,12 @@ namespace LibraryReserve.pojo
             IsReserve = false;
         }
 
+
         public override string ToString()
         {
-            string info = $"id:{Id},password:{Password},name:{Name},seat:{Seat},time:{Time},是否预约:{IsReserve}";
+            string info = $"id:{Id},password:{Password},name:{Name},seat:{Seat},time:{Time},明天是否预约:{IsReserve}";
             if (OptionalSeat != null)
                 info += $",optinalSeat:{OptionalSeat}";
-            info += "\r\n";
-            info += "预约状况:\r\n";
-            info += ReserveInfo + "\r\n";
             return info;
         }
     }

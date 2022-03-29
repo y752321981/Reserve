@@ -1,4 +1,5 @@
-﻿using LibraryReserve.pojo.response;
+﻿using LibraryReserve.pojo;
+using LibraryReserve.pojo.response;
 using Newtonsoft.Json;
 using Reserve.utils;
 using System;
@@ -30,9 +31,9 @@ namespace Reserve.manager
 			}
 		}
 		HttpClient httpClient;
-		public List<string> QueryReserveInfo(string user, string password)
+		public List<string> QueryReserveInfo(User user)
 		{
-			string token = Login(user, password);
+			string token = Login(user.Id, user.Password);
 			if (token == null)
 			{
 				return null;
@@ -42,7 +43,28 @@ namespace Reserve.manager
 				return GetReserveInfo(token);
 			}
 		}
-
+		public bool Reserve(User user)
+        {
+			string token = Login(user.Id, user.Password);
+			if (token == null)
+			{
+				return false;
+			}
+			else
+            {
+				user.IsReserve = false;
+				int roomId = GetRoomId(token, user.Name);
+				if (roomId == int.MinValue) return false;
+                int seatId = GetSeatId(token, roomId, user.Seat);
+				if (seatId == int.MinValue) return false;
+				int startTime = int.Parse(user.Time) * 60;
+				string endTime = GetEndTime(token, seatId, startTime);
+				if (endTime == null) return false;
+				bool result = Reserve(token, seatId, startTime, endTime);
+				user.IsReserve = result;
+				return result;
+			}
+        }
 
 		private HttpManager()
 		{
@@ -65,7 +87,7 @@ namespace Reserve.manager
 				}
 				else
                 {
-					throw new Exception(user + "登录状态" + loginResponse.status);
+					throw new Exception(user + ":登录状态" + loginResponse.status);
                 }
 			}
 			catch (Exception ex)
@@ -74,7 +96,6 @@ namespace Reserve.manager
 				return null;
 			}
 		}
-
 		private List<string> GetReserveInfo(string token)
 		{
 			List<string> reserveInfo = new List<string>();
@@ -109,9 +130,6 @@ namespace Reserve.manager
 				return null;
 			}
 		}
-
-
-
 		private int GetRoomId(string token, string roomName)
 		{
 
@@ -123,7 +141,7 @@ namespace Reserve.manager
 				response.Result.EnsureSuccessStatusCode();
 				Task<byte[]> cont = response.Result.Content.ReadAsByteArrayAsync();
 				RoomResponse roomResponse = JsonConvert.DeserializeObject<RoomResponse>(Encoding.UTF8.GetString(cont.Result));
-				if (roomResponse.data.Equals("success"))
+				if (roomResponse.status.Equals("success"))
 				{
 					var list = roomResponse.data;
 					foreach (var item in list)
@@ -156,7 +174,7 @@ namespace Reserve.manager
 				response.Result.EnsureSuccessStatusCode();
 				Task<byte[]> cont = response.Result.Content.ReadAsByteArrayAsync();
 				SeatResponse roomResponse = JsonConvert.DeserializeObject<SeatResponse>(Encoding.UTF8.GetString(cont.Result));
-				if (roomResponse.data.Equals("success"))
+				if (roomResponse.status.Equals("success"))
 				{
 					var list = roomResponse.data.layout;
 					foreach (var item in list)
@@ -179,8 +197,38 @@ namespace Reserve.manager
 				return int.MinValue;
 			}
 		}
+		private string GetEndTime(string token, int seatId ,int startTime)
+		{
+			try
+			{
+				DateTime dateTime = DateTime.Now.AddDays(1);
+				string url = $"https://seat.ujn.edu.cn:8443/rest/v2/endTimesForSeat/{seatId}/{dateTime.Year:D4}-{dateTime.Month:D2}-{dateTime.Day:D2}/{startTime}?token={token}";
+				Task<HttpResponseMessage> response = httpClient.GetAsync(url);
+				response.Result.EnsureSuccessStatusCode();
+				Task<byte[]> cont = response.Result.Content.ReadAsByteArrayAsync();
+				TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(Encoding.UTF8.GetString(cont.Result));
+				if (timeResponse.status.Equals("success"))
+				{
+					var list = timeResponse.data.endTimes;
+					if (list != null)
+					{
+						return list.Last().id;
+					}
+					throw new Exception("已没有可选时间");
+				}
+				else
+				{
+					throw new Exception("获取时间信息失败");
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.Log(ex.Message);
+				return null;
+			}
+		}
 
-		private bool Reserve(string token, int seatId, string beginTime, string endTime)
+		private bool Reserve(string token, int seatId, int beginTime, string endTime)
 		{
 			try
 			{

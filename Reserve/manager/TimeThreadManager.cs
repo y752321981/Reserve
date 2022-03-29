@@ -24,13 +24,21 @@ namespace Reserve.manager
 			ThreadEnable = true;
 			new Thread(() =>
 			{
-				Action<String> AsyncUIDelegate = delegate (string n) { timeBox.Text = n; };//定义一个委托
-				while (true)
+				Action<string> AsyncUIDelegate = delegate (string n) { timeBox.Text = n; };//定义一个委托
+				while (ThreadEnable)
 				{
 					try
 					{
+						if (DateTime.Now.Hour == 0 && DateTime.Now.Minute == 0 && DateTime.Now.Second == 1)
+						{
+							UserManager.Instance.ResetReserveState();
+						}
+						if ((DateTime.Now.Hour == 6 && DateTime.Now.Minute == 59 && DateTime.Now.Second >= 59) || (DateTime.Now.Hour == 7 && DateTime.Now.Minute == 0 && DateTime.Now.Second <= 10))
+						{
+							Debug.Log("自动启动预约");
+							UserManager.Instance.StartReserve();
+						}
 						Thread.Sleep(1000);
-						if (!ThreadEnable || timeBox == null) break;
 						timeBox?.Invoke(AsyncUIDelegate, new object[] { DateTime.Now.ToString("hh:mm:ss") });
 					}
 					catch (Exception ex)
