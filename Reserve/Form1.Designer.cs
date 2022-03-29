@@ -171,7 +171,6 @@ namespace Reserve
 			this.KeepDis.TabIndex = 10;
 			this.KeepDis.Text = "不灭屏";
 			this.KeepDis.UseVisualStyleBackColor = true;
-	
 			this.KeepDis.Click += new System.EventHandler(this.KeepDis_Click);
 			// 
 			// noSleep
@@ -185,7 +184,6 @@ namespace Reserve
 			this.noSleep.TabIndex = 11;
 			this.noSleep.Text = "灭屏，但不睡眠（建议）";
 			this.noSleep.UseVisualStyleBackColor = true;
-		
 			this.noSleep.Click += new System.EventHandler(this.noSleep_Click);
 			// 
 			// Form1
@@ -204,7 +202,7 @@ namespace Reserve
 			this.Controls.Add(this.fresh_button);
 			this.Controls.Add(this.timeBox);
 			this.Name = "Form1";
-			this.Text = "Form1";
+			this.Text = "与恶势力坚决斗争到底";
 			this.Closed += new System.EventHandler(this.Form1_Close);
 			this.Load += new System.EventHandler(this.Form1_Load);
 			((System.ComponentModel.ISupportInitialize)(this.UserTable)).EndInit();

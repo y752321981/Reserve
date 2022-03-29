@@ -51,7 +51,7 @@ namespace Reserve.manager
 							ComputerState(sleepState);
 						}
 						Thread.Sleep(900);
-						timeBox?.Invoke(AsyncUIDelegate, new object[] { DateTime.Now.ToString("hh:mm:ss") });
+						timeBox?.Invoke(AsyncUIDelegate, new object[] { DateTime.Now.ToString("HH:mm:ss") });
 					}
 					catch (Exception ex)
 					{
