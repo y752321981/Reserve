@@ -111,10 +111,8 @@ namespace Reserve.manager
 					var list = reservationResponse.data.reservations;
 					list.ForEach(reservation =>
 					{
-						if (reservation.date.Equals(DateTime.Now.ToString("yyyy-M-dd")) || reservation.date == DateTime.Now.AddDays(1).ToString("yyyy-M-dd"))
-						{
-							reserveInfo.Add($"{reservation.loc},{reservation.date},{reservation.begin}-{reservation.end},{reservation.stat}");
-						}
+						reserveInfo.Add($"{reservation.loc},{reservation.date},{reservation.begin}-{reservation.end},{reservation.stat}");
+						
 					});
 					return reserveInfo;
 				}

@@ -58,7 +58,7 @@ namespace Reserve.manager
                 {
                     info += s + '\n';
                     string[] vs = s.Split(',');
-                    if (vs[1] == DateTime.Now.AddDays(1).ToString("yyyy-M-dd") && vs[3] == "RESERVE")
+                    if (vs[1] == DateTime.Now.AddDays(1).ToString("yyyy-M-dd") && vs[3].Equals("RESERVE"))
                     {
                         item.IsReserve = true;
                     }
@@ -77,6 +77,7 @@ namespace Reserve.manager
             {
                 if (!item.IsReserve)
                 {
+                    Debug.Log(item.Id + "自动启动预约");
                     bool result = HttpManager.Instance.Reserve(item);
                     Debug.Log(item.Id + "预约结果:" + result);
                 }

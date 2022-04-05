@@ -42,7 +42,7 @@ namespace Reserve.manager
 						}
 						if ((DateTime.Now.Hour == 6 && DateTime.Now.Minute == 59 && DateTime.Now.Second >= 55) || (DateTime.Now.Hour == 7 && DateTime.Now.Minute == 0 && DateTime.Now.Second <= 10))
 						{
-							Debug.Log("自动启动预约");
+							
 							UserManager.Instance.StartReserve();
 							continue;
 						}
