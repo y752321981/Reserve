@@ -23,8 +23,10 @@ namespace Reserve.manager
 		private TimeThreadManager()
 		{
 			ThreadEnable = false;
+			reserveTime = new DateTime(1970, 1, 1, 6, 59, 58);
 		}
 		public SleepState sleepState = SleepState.No_Sleep;
+		public DateTime reserveTime;
 		public void StartThread(TextBox timeBox)
 		{
 			if (ThreadEnable) return;
@@ -40,7 +42,7 @@ namespace Reserve.manager
 						{
 							UserManager.Instance.ResetReserveState();
 						}
-						if ((DateTime.Now.Hour == 6 && DateTime.Now.Minute == 59 && DateTime.Now.Second >= 55) || (DateTime.Now.Hour == 7 && DateTime.Now.Minute == 0 && DateTime.Now.Second <= 10))
+						if ((DateTime.Now.Hour == reserveTime.Hour && DateTime.Now.Minute == reserveTime.Minute && DateTime.Now.Second >= reserveTime.Second) || (DateTime.Now.Hour == 7 && DateTime.Now.Minute == 0 && DateTime.Now.Second <= 10))
 						{
 							
 							UserManager.Instance.StartReserve();

@@ -54,18 +54,16 @@ namespace Reserve.manager
             {
                 List<string> list = HttpManager.Instance.QueryReserveInfo(item);
                 string info = string.Empty;
+                item.IsReserve = false;
                 list?.ForEach(s =>
                 {
                     info += s + '\n';
                     string[] vs = s.Split(',');
-                    if (vs[1] == DateTime.Now.AddDays(1).ToString("yyyy-M-dd") && vs[3].Equals("RESERVE"))
+                    if (vs[1] == DateTime.Now.AddDays(1).ToString("yyyy-M-d") && vs[3].Equals("RESERVE"))
                     {
                         item.IsReserve = true;
                     }
-                    else
-                    {
-                        item.IsReserve= false;
-                    }
+                    
                 });
                 item.ReserveInfo = info;
             });

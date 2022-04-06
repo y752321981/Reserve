@@ -27,7 +27,7 @@ namespace Reserve.manager
 		private ExcelManager() { }
 
     
-        public string FilePath { get { return ConfigManager.Instance.filePath; } set { ConfigManager.Instance.filePath = value; } }
+        public string FilePath { get { return ConfigManager.Instance.FilePath; } set { ConfigManager.Instance.FilePath = value; } }
         public void WriteUser()
 		{
             string path = FilePath;

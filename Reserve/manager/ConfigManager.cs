@@ -4,6 +4,8 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Text;
 using System.Security.AccessControl;
+using Reserve.utils;
+
 namespace Reserve.manager
 {
 	public class ConfigManager
@@ -20,7 +22,8 @@ namespace Reserve.manager
 		}
 		private Config config;
 		private string path;
-		public string filePath { get { return config.excelFilePath; } set { config.excelFilePath = value; } }
+		public string FilePath { get { return config.excelFilePath; } set { config.excelFilePath = value; } }
+		public DateTime ReserveTime { get { return config.reserveTime; } set { config.reserveTime = value; } } 
 		private ConfigManager()
 		{
 			path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Reserve\\config";
@@ -68,7 +71,16 @@ namespace Reserve.manager
 						hasRead += ReadThisTime;
 						waitToRead -= ReadThisTime;
 					}
-					config = JsonConvert.DeserializeObject<Config>(Encoding.UTF8.GetString(data));
+					try
+					{
+						config = JsonConvert.DeserializeObject<Config>(Encoding.UTF8.GetString(data));
+					}
+					catch (Exception ex)
+					{
+						Debug.Log(ex.Message);
+						config = new Config();
+					}
+					
 				}
 			}
 			else

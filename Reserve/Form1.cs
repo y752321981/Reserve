@@ -28,6 +28,8 @@ namespace Reserve
 			Fresh();
 			Debug.FreshEvene += Debug_FreshEvene;
 			Debug.logText = logText;
+			dateTimePicker1.Value = ConfigManager.Instance.ReserveTime;
+			TimeThreadManager.Instance.reserveTime = dateTimePicker1.Value;
 			Debug.Log("加载好了");
 		}
 
@@ -67,7 +69,7 @@ namespace Reserve
 		{
 			List<User> users = UserManager.Instance.FreshUserList();
 			DataGradViewDisplay(UserTable, users);
-			folderName.Text = ConfigManager.Instance.filePath;
+			folderName.Text = ConfigManager.Instance.FilePath;
 		}
 
 		private void DataGradViewDisplay(DataGridView dataGridView, List<User> users)
@@ -110,7 +112,7 @@ namespace Reserve
 				DialogResult result = dialog.ShowDialog();
 				if (result == DialogResult.OK)
                 {
-					ConfigManager.Instance.filePath = dialog.FileName;
+					ConfigManager.Instance.FilePath = dialog.FileName;
 					Action AsyncUIDelegate = delegate () { Fresh(); };//定义一个委托
 					this?.Invoke(AsyncUIDelegate);
 				}
@@ -190,6 +192,17 @@ namespace Reserve
 		private void KeepDis_Click(object sender, EventArgs e)
 		{
 			ComputerStateChange(false);
+		}
+
+		private void noSleep_CheckedChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+		{
+			TimeThreadManager.Instance.reserveTime = dateTimePicker1.Value;
+			ConfigManager.Instance.ReserveTime = dateTimePicker1.Value;
 		}
 	}
 }

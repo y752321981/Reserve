@@ -45,6 +45,8 @@ namespace Reserve
 			this.button1 = new System.Windows.Forms.Button();
 			this.KeepDis = new System.Windows.Forms.CheckBox();
 			this.noSleep = new System.Windows.Forms.CheckBox();
+			this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+			this.label1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.UserTable)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -165,7 +167,7 @@ namespace Reserve
 			// KeepDis
 			// 
 			this.KeepDis.AutoSize = true;
-			this.KeepDis.Location = new System.Drawing.Point(584, 12);
+			this.KeepDis.Location = new System.Drawing.Point(567, 12);
 			this.KeepDis.Name = "KeepDis";
 			this.KeepDis.Size = new System.Drawing.Size(74, 19);
 			this.KeepDis.TabIndex = 10;
@@ -178,19 +180,45 @@ namespace Reserve
 			this.noSleep.AutoSize = true;
 			this.noSleep.Checked = true;
 			this.noSleep.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.noSleep.Location = new System.Drawing.Point(584, 38);
+			this.noSleep.Location = new System.Drawing.Point(567, 38);
 			this.noSleep.Name = "noSleep";
 			this.noSleep.Size = new System.Drawing.Size(194, 19);
 			this.noSleep.TabIndex = 11;
 			this.noSleep.Text = "灭屏，但不睡眠（建议）";
 			this.noSleep.UseVisualStyleBackColor = true;
+			this.noSleep.CheckedChanged += new System.EventHandler(this.noSleep_CheckedChanged);
 			this.noSleep.Click += new System.EventHandler(this.noSleep_Click);
+			// 
+			// dateTimePicker1
+			// 
+			this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+			this.dateTimePicker1.Location = new System.Drawing.Point(876, 105);
+			this.dateTimePicker1.Name = "dateTimePicker1";
+			this.dateTimePicker1.ShowUpDown = true;
+			this.dateTimePicker1.Size = new System.Drawing.Size(118, 25);
+			this.dateTimePicker1.TabIndex = 12;
+			this.dateTimePicker1.Value = new System.DateTime(2022, 4, 6, 6, 59, 58, 0);
+			this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+			// 
+			// label1
+			// 
+			this.label1.AutoEllipsis = true;
+			this.label1.AutoSize = true;
+			this.label1.Enabled = false;
+			this.label1.Location = new System.Drawing.Point(761, 87);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(233, 15);
+			this.label1.TabIndex = 13;
+			this.label1.Text = "自动开始预约时间,建议在7点左右";
+			this.label1.Visible = false;
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1006, 673);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.dateTimePicker1);
 			this.Controls.Add(this.noSleep);
 			this.Controls.Add(this.KeepDis);
 			this.Controls.Add(this.button1);
@@ -226,6 +254,8 @@ namespace Reserve
         private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.CheckBox KeepDis;
 		private System.Windows.Forms.CheckBox noSleep;
+		private System.Windows.Forms.DateTimePicker dateTimePicker1;
+		private System.Windows.Forms.Label label1;
 	}
 }
 
